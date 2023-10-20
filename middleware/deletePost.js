@@ -1,8 +1,18 @@
-const Post = require("../models/blogPost");
-const User = require("../models/user");
+require('dotenv').config();
 
-const deletePost = (req, res, next) => {
+const Post = require('../models/blogPost');
+const connectToDatabase = require('../middleware/connectToDatabase');
+
+
+const deletePost = async (req, res, next) => {
     const postId = req.params.postId;
+
+    const db = await connectToDatabase(
+        process.env.MONGODB_POST_USER,
+        process.env.MONGODB_POST_PASS,
+        process.env.MONGODB_CLUSTER,
+        process.env.MONGODB_POSTS_DATABASE
+    );
     
     Post.findById(postId)
       .then(post => {
@@ -11,7 +21,7 @@ const deletePost = (req, res, next) => {
           error.statusCode = 404;
           throw error;
         }
-        // Check logged in user
+        // Check logged in user and check the priviledges
         if (post.creator.toString() !== req.userId) {
           const error = new Error('Not authorized!');
           error.statusCode = 403;
@@ -19,22 +29,16 @@ const deletePost = (req, res, next) => {
         }
         return Post.findByIdAndDelete(postId);
       })
-      .then(result => {
-        return User.findById(req.userId);
-      })
-      .then(user => {
-        user.posts.pull(postId);
-        return user.save();
-      })
-      .then(result => {
-        res.status(200).json({ message: 'Deleted post.' });
+      .then(() => {
+        res.status(200).json({ message: 'Deleted post Successfully.' });
       })
       .catch(err => {
         if (!err.statusCode) {
           err.statusCode = 500;
         }
         next(err);
-      });
+      })
+      .finally(() => db.connection.close());
 }
 
 module.exports = deletePost;

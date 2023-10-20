@@ -9,8 +9,8 @@ const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
 
     const client = await connectToDatabase(
-        process.env.MONGODB_POST_USER,
-        process.env.MONGODB_POST_PASS,
+        process.env.MONGODB_CHECKUSER_USER,
+        process.env.MONGODB_CHECKUSER_PASS,
         process.env.MONGODB_CLUSTER,
         process.env.MONGODB_USERS_DATABASE
     );

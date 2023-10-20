@@ -42,8 +42,8 @@ const signUpUser = async (req, res, next) => {
             }
             client.connection.close(); //Always close connections that have write access to databases
             next(err);
-        });
-
+        })
+        .finally(() => client.connection.close());
 }
 
 module.exports = signUpUser;

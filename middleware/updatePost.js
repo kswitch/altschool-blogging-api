@@ -1,8 +1,18 @@
-const Post = require("../models/blogPost");
+require('dotenv').config();
 
-const updatePost = (req, res, next) => {
+const Post = require("../models/blogPost");
+const connectToDatabase = require('../middleware/connectToDatabase')
+
+const updatePost = async (req, res, next) => {
     const {title, body, description, tags} = req.body;
     const postId = req.params.postId;
+
+    const db = await connectToDatabase(
+        process.env.MONGODB_POST_USER,
+        process.env.MONGODB_POST_PASS,
+        process.env.MONGODB_CLUSTER,
+        process.env.MONGODB_POSTS_DATABASE
+    );
 
     Post.findById(postId)
         .then(post => {
@@ -20,7 +30,7 @@ const updatePost = (req, res, next) => {
             post.body = body;
             post.description = description;
             post.tags = tags.toLowerCase().split(/[\s, ]+/);
-            post.updatedAt = new  Date.now();
+            post.updatedAt = Date.now();
 
             return post.save();
         })
@@ -32,7 +42,8 @@ const updatePost = (req, res, next) => {
                 err.statusCode = 500;
             }
             next(err);
-        });
+        })
+        .finally(() => db.connection.close());
 }
 
 module.exports = updatePost;
