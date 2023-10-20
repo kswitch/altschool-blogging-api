@@ -14,12 +14,11 @@ router.post('/posts', validateInput, isAuthenticated, postController.createPost)
 //DELETE /blog/posts
 router.delete('/posts/:postId', isAuthenticated, postController.deletePost);
 
-// router.put(
-//   '/post/:postId',
-//    validateInput,
-//   isAuthenticated,
-//   postController.updatePost
-// );
+//PUT /blog/posts
+router.put('/posts/:postId', validateInput, isAuthenticated, postController.updatePost);
+
+//PATCH /blog/posts
+router.patch('/posts/:postId', validateInput, isAuthenticated, postController.updatePost);
 
 
 module.exports = router;
