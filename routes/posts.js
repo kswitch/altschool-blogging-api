@@ -1,4 +1,5 @@
-const router = require('express').Router();
+const express = require('express');
+const router = express.Router();
 
 const postController = require('../controllers/posts');
 const isAuthenticated = require('../middleware/isAuthenticated');
