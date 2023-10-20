@@ -58,10 +58,10 @@ exports.createPost = async (req, res, next) => {
         tags: tags.toLowerCase().split(/[\s, ]+/), // Split tags either by space or commas
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        state: 'published',
+        published: true,
+        get state() { return this.published ? 'published' : 'draft' }, //set state according to the published key
         read_count: 1,
         reading_time: `${Math.ceil(body.split(' ').length / 180)} mins`, //Calculate reading time base of 180 WPM
-        published: false,
         creator: req.userId
     });
 
