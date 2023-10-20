@@ -34,13 +34,13 @@ const signUpUser = async (req, res, next) => {
         })
         .then(result => {
             res.status(201).json({ message: 'Signed Up Successfully!', userId: result._id });
-            client.connection.close();
+            client.connection.close(); //Always close connections that have write access to databases
         })
         .catch(err => {
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
-            client.connection.close();
+            client.connection.close(); //Always close connections that have write access to databases
             next(err);
         });
 

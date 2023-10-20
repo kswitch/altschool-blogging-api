@@ -20,21 +20,25 @@ exports.createPost = async (req, res, next) => {
         next(error);
     }
 
-    await connectToDatabase(
+    const postsDB = await connectToDatabase(
         process.env.MONGODB_POST_USER,
         process.env.MONGODB_POST_PASS,
         process.env.MONGODB_CLUSTER,
         process.env.MONGODB_POSTS_DATABASE
     );
 
-    await connectToDatabase(
-        process.env.MONGODB_POST_USER,
+    const usersDB = await connectToDatabase(
+        process.env.MONGODB_POST_USER, //This MongoDB username cannot write to the UsersDatabase, please fix
         process.env.MONGODB_POST_PASS,
         process.env.MONGODB_CLUSTER,
         process.env.MONGODB_USERS_DATABASE
     );
 
-    return createPost(req, res, next);
+    createPost(req, res, next);
+    
+    // Close Database Connections
+    postsDB.connection.close();
+    return usersDB.connection.close();
 };
 
 exports.getPosts = async (req, res, next) => {
@@ -63,30 +67,37 @@ exports.updatePost = async (req, res, next) => {
         next(error);
     }
 
-    await connectToDatabase(
+    const client = await connectToDatabase(
         process.env.MONGODB_POST_USER,
         process.env.MONGODB_POST_PASS,
         process.env.MONGODB_CLUSTER,
         process.env.MONGODB_POSTS_DATABASE
     );
+    
+    updatePost(req, res, next);
 
-    return updatePost(req, res, next);
+    // Close Database Connections
+    return client.connection.close();
 }
 
 exports.deletePost = async (req, res, next) => {
-    await connectToDatabase(
+    const postsDB = await connectToDatabase(
         process.env.MONGODB_POST_USER,
         process.env.MONGODB_POST_PASS,
         process.env.MONGODB_CLUSTER,
         process.env.MONGODB_POSTS_DATABASE
     );
 
-    await connectToDatabase(
-        process.env.MONGODB_POST_USER, //This MongoDB username cannot write to the UsersDatabase, please fix
-        process.env.MONGODB_POST_PASS,
+    const usersDB = await connectToDatabase(
+        process.env.MONGODB_ADDUSER_USER,
+        process.env.MONGODB_ADDUSER_PASS,
         process.env.MONGODB_CLUSTER,
         process.env.MONGODB_USERS_DATABASE
     );
 
-    return deletePost(req, res, next);
+    deletePost(req, res, next);
+
+    // Close Database Connections
+    postsDB.connection.close();
+    return usersDB.connection.close();
 };

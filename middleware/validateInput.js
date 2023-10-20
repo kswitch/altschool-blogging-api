@@ -14,8 +14,9 @@ const validateSignUpInput = [
     body('password').trim().notEmpty().isLength({ min: 5 }).bail().withMessage('Please enter a password with minimum length of five characters')
 ];
 
-const validateLogin = [
-
+const validateLoginDetails = [
+    body('email').trim().notEmpty().isEmail().bail().withMessage('Please enter a valid email'),
+    body('password').trim().notEmpty().bail().withMessage('Please enter a password')
 ]
 
-module.exports = { validatePost, validateSignUpInput, validateLogin };
+module.exports = { validatePost, validateSignUpInput, validateLoginDetails };
