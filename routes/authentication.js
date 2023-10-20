@@ -8,4 +8,6 @@ const checkIfUserExist = require('../middleware/checkIfUserExist');
 
 const router = express.Router();
 
-router.put('/signup', validateSignUpDetails, checkIfUserExist, authController.signUp);
+router.post('/signup', validateSignUpDetails, checkIfUserExist, authController.signUp);
+
+module.exports = router;

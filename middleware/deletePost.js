@@ -17,7 +17,7 @@ const deletePost = (req, res, next) => {
           error.statusCode = 403;
           throw error;
         }
-        return Post.findByIdAndRemove(postId);
+        return Post.findByIdAndDelete(postId);
       })
       .then(result => {
         return User.findById(req.userId);

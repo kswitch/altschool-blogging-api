@@ -9,8 +9,8 @@ exports.signUp = (req, res, next) => {
     const error = new Error('Validation failed.');
     error.statusCode = 422;
     error.data = errors.array();
+    next(error)
     throw error;
   }
-
-  return signUpUser;
+  return signUpUser(req, res, next);
 };

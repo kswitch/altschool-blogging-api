@@ -26,6 +26,7 @@ app.use((req, res, next) => {
 
 //Routes
 app.use('/blog', blogRoutes);
+app.use('/auth', authenticationRoutes)
 app.get('/', (req, res, next) => res.status(200).sendFile(index));
 app.get('/index.html', (req, res, next) => res.status(200).sendFile(index));
 
