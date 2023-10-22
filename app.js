@@ -1,10 +1,12 @@
+require('dotenv').config();
+
 const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser')
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 const index = path.join(process.cwd(), 'static', 'index.html');
 const notFound = path.join(process.cwd(), 'static', '404.html');
